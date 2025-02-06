@@ -1,22 +1,18 @@
 import random
 
-
 '''
 Euclid's algorithm for determining the greatest common divisor
 Use iteration to make it faster for larger integers
 '''
-
 
 def gcd(a, b):
     while b != 0:
         a, b = b, a % b
     return a
 
-
 '''
 Euclid's extended algorithm for finding the multiplicative inverse of two numbers
 '''
-
 
 def multiplicative_inverse(e, phi):
     d = 0
@@ -26,7 +22,7 @@ def multiplicative_inverse(e, phi):
     temp_phi = phi
 
     while e > 0:
-        temp1 = temp_phi//e
+        temp1 = temp_phi // e
         temp2 = temp_phi - temp1 * e
         temp_phi = e
         e = temp2
@@ -42,22 +38,19 @@ def multiplicative_inverse(e, phi):
     if temp_phi == 1:
         return d + phi
 
-
 '''
 Tests to see if a number is prime.
 '''
-
 
 def is_prime(num):
     if num == 2:
         return True
     if num < 2 or num % 2 == 0:
         return False
-    for n in range(3, int(num**0.5)+2, 2):
+    for n in range(3, int(num ** 0.5) + 2, 2):
         if num % n == 0:
             return False
     return True
-
 
 def generate_key_pair(p, q):
     if not (is_prime(p) and is_prime(q)):
@@ -68,7 +61,7 @@ def generate_key_pair(p, q):
     n = p * q
 
     # Phi is the totient of n
-    phi = (p-1) * (q-1)
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
@@ -86,15 +79,13 @@ def generate_key_pair(p, q):
     # Public key is (e, n) and private key is (d, n)
     return ((e, n), (d, n))
 
-
 def encrypt(pk, plaintext):
-    # Unpack the key into it's components
+    # Unpack the key into its components
     key, n = pk
     # Convert each letter in the plaintext to numbers based on the character using a^b mod m
     cipher = [pow(ord(char), key, n) for char in plaintext]
     # Return the array of bytes
     return cipher
-
 
 def decrypt(pk, ciphertext):
     # Unpack the key into its components
@@ -104,7 +95,6 @@ def decrypt(pk, ciphertext):
     # Return the array of bytes as a string
     plain = [chr(int(char2)) for char2 in aux]
     return ''.join(plain)
-
 
 if __name__ == '__main__':
     '''
@@ -127,8 +117,14 @@ if __name__ == '__main__':
     encrypted_msg = encrypt(public, message)
 
     print(" - Your encrypted message is: ", ''.join(map(lambda x: str(x), encrypted_msg)))
-    print(" - Decrypting message with private key ", private, " . . .")
-    print(" - Your message is: ", decrypt(private, encrypted_msg))
+    
+    # Asking for decryption key from user
+    d = int(input(" - Enter the decryption key (private exponent): "))
+    n = int(input(" - Enter the modulus (from the private key pair): "))
+    
+    # Decrypting with user inputted private key
+    print(" - Decrypting message with private key ", (d, n), " . . .")
+    print(" - Your message is: ", decrypt((d, n), encrypted_msg))
 
     print(" ")
     print("============================================ END ==========================================================")
